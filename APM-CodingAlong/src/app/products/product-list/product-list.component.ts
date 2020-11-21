@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
@@ -15,14 +17,21 @@ export class ProductListComponent implements OnInit, OnDestroy {
   errorMessage: string;
 
   displayCode: boolean;
-
+  
   products: Product[];
+
+  displayCode$ = this.store.select('products')
+    .pipe(
+      filter(product => Boolean(product)),
+      map(product =>  product.showProductCode)
+    );
 
   // Used to highlight the selected product in the list
   selectedProduct: Product | null;
   sub: Subscription;
 
-  constructor(private productService: ProductService) { }
+  constructor(private store: Store<any>,
+              private productService: ProductService) { }
 
   ngOnInit(): void {
     this.sub = this.productService.selectedProductChanges$.subscribe(
@@ -33,6 +42,12 @@ export class ProductListComponent implements OnInit, OnDestroy {
       next: (products: Product[]) => this.products = products,
       error: err => this.errorMessage = err
     });
+
+    this.store
+    .select('products')
+    .subscribe(products =>  {
+      if (products) this.displayCode = products.showProductCode 
+    })
   }
 
   ngOnDestroy(): void {
@@ -40,7 +55,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
   }
 
   checkChanged(): void {
-    this.displayCode = !this.displayCode;
+    this.store.dispatch({
+      type: '[Product] Toggle Product Code'
+    })
   }
 
   newProduct(): void {
