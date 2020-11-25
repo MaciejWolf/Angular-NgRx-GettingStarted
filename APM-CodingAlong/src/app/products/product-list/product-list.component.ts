@@ -6,6 +6,7 @@ import { filter, map } from 'rxjs/operators';
 
 import { Product } from '../product';
 import { ProductService } from '../product.service';
+import { State } from '../state/Product.reducer';
 
 @Component({
   selector: 'pm-product-list',
@@ -30,7 +31,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
   selectedProduct: Product | null;
   sub: Subscription;
 
-  constructor(private store: Store<any>,
+  constructor(private store: Store<State>,
               private productService: ProductService) { }
 
   ngOnInit(): void {
