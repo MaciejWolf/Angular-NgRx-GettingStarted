@@ -2,6 +2,7 @@ import { createFeatureSelector, createReducer, createSelector, on } from '@ngrx/
 import { Product } from '../product';
 import * as AppState from '../../state/app.state';
 import * as ProductActions from './product.actions';
+import { state } from '@angular/animations';
 
 export interface State extends AppState.State {
   products: ProductState;
@@ -42,6 +43,30 @@ export const productReducer = createReducer<ProductState>(
     return {
       ...state,
       showProductCode: !state.showProductCode
+    }
+  }),
+  on(ProductActions.clearCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProduct: null
+    }
+  }),
+  on(ProductActions.initializeCurrentProduct, (state): ProductState => {
+    return {
+      ...state,
+      currentProduct: {
+        id: 0,
+        productName: '',
+        productCode: 'New',
+        description: '',
+        starRating: 0
+      }
+    }
+  }),
+  on(ProductActions.setCurrentProduct, (state, action): ProductState => {
+    return {
+      ...state,
+      currentProduct: action.product
     }
   })
 )
