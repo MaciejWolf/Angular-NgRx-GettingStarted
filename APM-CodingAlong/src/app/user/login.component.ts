@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-
+import {getMaskUserName } from './state/user.reducer';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -20,10 +20,8 @@ export class LoginComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.store.select('user')
-      .subscribe(users => {
-        if (users) this.maskUserName = users.maskUserName
-      })
+    this.store.select(getMaskUserName)
+      .subscribe(maskUserName => this.maskUserName = maskUserName)
   }
 
   cancel(): void {
