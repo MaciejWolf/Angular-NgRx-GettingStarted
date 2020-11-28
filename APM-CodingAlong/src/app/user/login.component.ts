@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {getMaskUserName } from './state/user.reducer';
 import { AuthService } from './auth.service';
+import { maskUserName } from './state/user.actions';
 
 @Component({
   templateUrl: './login.component.html',
@@ -29,9 +30,7 @@ export class LoginComponent implements OnInit {
   }
 
   checkChanged(): void {
-    this.store.dispatch({
-      type: '[User] Mask User Name'
-    })
+    this.store.dispatch(maskUserName())
   }
 
   login(loginForm: NgForm): void {
